@@ -10,9 +10,12 @@ int main() {
     std::cout << "\nWord to find anagrams of: ";
     std::cin >> word;
 
-    std::cout << "\nInstantiating solver";
+    std::cout << "\nInstantiating solver\n";
     Anagram_Solver solver = Anagram_Solver(file, word);
 
-    std::cout << "\nParsing the text";
+    std::cout << "Parsing the text\n";
     solver.parse_text();
+
+    solver.solver();
+    
 }
