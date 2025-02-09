@@ -38,7 +38,6 @@ int Anagram_Solver::parse_text()
         if ((alph) && (str.length() >= 3 && str.length() <= anagram_length))
         {
             str = strip_non_alphanumeric(str);
-            std::cout << str << std::endl;
             Anagram_Solver::words.push_back(str);
         }
     }
