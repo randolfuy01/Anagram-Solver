@@ -23,7 +23,7 @@ private:
 public:
     std::string file_name;
     std::string anagram;
-    std::unordered_map<char, int> anagram_letters;
+    std::unordered_map<char, int> anagram_hash;
     int anagram_length;
 
     /**
@@ -33,14 +33,14 @@ public:
     {
         for (char c : anagram)
         {
-            const auto &found = anagram_letters.find(c);
-            if (found == anagram_letters.end())
+            const auto &found = anagram_hash.find(c);
+            if (found == anagram_hash.end())
             {
-                anagram_letters.insert({c, 1});
+                anagram_hash.insert({c, 1});
             }
             else
             {
-                anagram_letters[c]++;
+                anagram_hash[c]++;
             }
         }
     }
@@ -65,3 +65,10 @@ public:
      */
     void solver();
 };
+
+/** @brief: Helper function for removing non-alphabetical characters, for parsing text
+ * 
+ * @param input: word to parse
+ * @return word after removal
+ */
+std::string strip_non_alphanumeric(const std::string &input);

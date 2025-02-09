@@ -1,4 +1,5 @@
 #include "anagram_solver.h"
+#include <chrono>
 
 int main() {
     std::string file;
@@ -16,6 +17,15 @@ int main() {
     std::cout << "Parsing the text\n";
     solver.parse_text();
 
+    auto start_time = std::chrono::high_resolution_clock::now();
+
     solver.solver();
-    
+
+    auto end_time = std::chrono::high_resolution_clock::now();
+
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+
+    std::cout << "Elapsed time: " << duration.count() << " milliseconds" << std::endl;
+
+    return 0;
 }

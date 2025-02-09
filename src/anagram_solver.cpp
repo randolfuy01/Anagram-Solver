@@ -1,4 +1,10 @@
 #include "anagram_solver.h"
+#include <iostream>
+#include <fstream>
+#include <cctype>
+#include <unordered_map>
+#include <vector>
+#include <algorithm>
 
 int Anagram_Solver::parse_text()
 {
@@ -13,7 +19,6 @@ int Anagram_Solver::parse_text()
 
     while (std::getline(file, str))
     {
-
         if (file.fail())
         {
             std::cerr << "\nError while parsing the file\n";
@@ -21,7 +26,6 @@ int Anagram_Solver::parse_text()
             return 0;
         }
 
-        // Ensure only alphabetical words
         bool alph = true;
         for (char c : str)
         {
@@ -31,8 +35,10 @@ int Anagram_Solver::parse_text()
             }
         }
 
-        if ((alph) && (str.length() <= anagram_length) && (str.length() > 3))
+        if ((alph) && (str.length() >= 3 && str.length() <= anagram_length))
         {
+            str = strip_non_alphanumeric(str);
+            std::cout << str << std::endl;
             Anagram_Solver::words.push_back(str);
         }
     }
@@ -43,28 +49,18 @@ int Anagram_Solver::parse_text()
 
 bool Anagram_Solver::character_validator(std::string word)
 {
-
-    std::map<char, int> hash;
-
+    std::unordered_map<char, int> word_hash;
     for (const auto &letter : word)
     {
-        auto it = hash.find(letter);
-        if (it == hash.end())
-        {
-            hash.insert({letter, 1});
-        }
-        else
-        {
-            hash[letter]++;
-        }
+        word_hash[letter]++;
     }
 
-    for (std::unordered_map<char, int>::const_iterator it = anagram_letters.cbegin(); it != anagram_letters.cend(); ++it)
+    for (const auto &key : word_hash)
     {
-        auto found = hash.find(it->first);
-        if (found != hash.end() || (found->second > it->second))
+        auto found = Anagram_Solver::anagram_hash.find(key.first);
+        if (found == Anagram_Solver::anagram_hash.end() || key.second > found->second)
         {
-            return false;
+            return false; 
         }
     }
 
@@ -73,22 +69,34 @@ bool Anagram_Solver::character_validator(std::string word)
 
 void Anagram_Solver::solver()
 {
-    std::cout << "\nFinding all matching criterias" << std::endl;
-    int counter = 0;
+    std::cout << "Starting solver\n";
+    std::vector<std::string> valid;
     for (const auto &word : Anagram_Solver::words)
     {
-        counter += 1;
-        std::cout << word << std::endl;
-        if (!Anagram_Solver::character_validator(word))
+        if (Anagram_Solver::character_validator(word))
         {
-            Anagram_Solver::words.erase(std::remove(Anagram_Solver::words.begin(), Anagram_Solver::words.end(), word), Anagram_Solver::words.end());
-        }
-        else
-        {
-            std::cout << word << std::endl;
-        }
-        if (counter == 15) {
-            break;
+            valid.push_back(word);
         }
     }
+
+    std::cout << "Sorting words in descending length\n";
+    std::sort(valid.begin(), valid.end(), [](const std::string &a, const std::string &b)
+              { return a.length() > b.length(); });
+
+    std::cout << "\nPrinting valid words: \n"
+              << std::endl;
+    for (const auto &word : valid)
+    {
+        std::cout << word << "\n";
+    }
+}
+
+std::string strip_non_alphanumeric(const std::string &input) {
+    std::string result;
+    for (char c : input) {
+        if (std::isalnum(c)) {  
+            result.push_back(c);
+        }
+    }
+    return result;
 }
