@@ -60,7 +60,7 @@ bool Anagram_Solver::character_validator(std::string word)
         auto found = Anagram_Solver::anagram_hash.find(key.first);
         if (found == Anagram_Solver::anagram_hash.end() || key.second > found->second)
         {
-            return false; 
+            return false;
         }
     }
 
@@ -91,10 +91,13 @@ void Anagram_Solver::solver()
     }
 }
 
-std::string strip_non_alphanumeric(const std::string &input) {
+std::string strip_non_alphanumeric(const std::string &input)
+{
     std::string result;
-    for (char c : input) {
-        if (std::isalnum(c)) {  
+    for (char c : input)
+    {
+        if (std::isalnum(c))
+        {
             result.push_back(c);
         }
     }
